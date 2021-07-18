@@ -1,8 +1,8 @@
 import random
 from copy import deepcopy
 
-from tictactoe_models.tictactoe_player import DQNPlayer
-from tictactoe_models.tictactoe_v0 import Tictactoe_v0
+from Tictactoe.tictactoe_player import TTTPlayer
+from Tictactoe.tictactoe_environment_v0 import Tictactoe_v0
 from multiprocessing import Process, Queue
 from multiprocessing.managers import ValueProxy
 from tensorflow.keras import optimizers
@@ -18,7 +18,7 @@ class Evaluator(Process):
         self.best_player = best_player
 
     def run(self) -> None:
-        player = DQNPlayer()
+        player = TTTPlayer()
         optimizer = optimizers.RMSprop(learning_rate=0.00025)
         player.brain.add(Dense(128, activation='relu', input_shape=(9,)))
         player.brain.add(Dense(128, activation='relu'))
@@ -38,7 +38,7 @@ class Evaluator(Process):
                     self.best_player.value = deepcopy(player)
 
     @staticmethod
-    def evaluate_player(player: DQNPlayer):
+    def evaluate_player(player: TTTPlayer):
         print("--- start evaluation process ---")
         result_score = {1: 1, 0: 0.5, -1: 0}
         env_test = Tictactoe_v0()

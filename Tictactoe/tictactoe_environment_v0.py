@@ -1,16 +1,21 @@
 import random
+from Tictactoe.tictactoe_player import BasePlayer
 
 
 class Tictactoe_v0:
-    def __init__(self):
+    def __init__(self, player_1: BasePlayer, player_2: BasePlayer):
         self.board = [0] * 9
         self.wining_position = [[0, 1, 2], [3, 4, 5], [6, 7, 8],
                                 [0, 3, 6], [1, 4, 7], [2, 5, 8],
                                 [0, 4, 8], [6, 4, 2]]
         self.current_turn = 1
         self.player_mark = 1
+        self.player_1 = player_1
+        self.player_2 = player_2
 
-    def reset(self, is_human_first):
+    def reset(self, first_player=None):
+        if first_player not in [0, 1]:
+            raise Exception('first_player must be a integer number 0 or 1')
         self.board = [0] * 9
         self.current_turn = 1
         self.player_mark = 1 if is_human_first else -1
