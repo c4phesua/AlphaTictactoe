@@ -41,17 +41,14 @@ class DQN(BaseModel):
             history = self.training_network.fit(states, q_values, epochs=epochs, batch_size=batch_size, verbose=verbose)
             return history.history['loss']
 
-    def replay(self, states, actions, rewards, next_states, terminals):
-        q_values = self.target_network.predict(np.array(states))  # get q value at state t by target network
+    def replay(self, states, actions, rewards, next_states, terminates):
+        q_values = self.training_network.predict(np.array(states))  # get q value at state t by target network
         nq_values = self.target_network.predict(np.array(next_states))  # get q value at state t+1 by target network
         for i in range(len(states)):
             a = actions[i]
-            done = terminals[i]
+            done = terminates[i]
             r = rewards[i]
-            if done:
-                q_values[i][a] = r
-            else:
-                q_values[i][a] = r + self.gamma * np.max(nq_values[i])
+            q_values[i][a] = r + self.gamma * np.max(nq_values[i])*(1 - done)
         return states, q_values
 
     def update_target_network(self):
